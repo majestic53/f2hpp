@@ -1,0 +1,47 @@
+f2hpp is a tool that converts binary files into hpp resource files for use in C++ projects
+
+Version:
+	- 0.1.0
+
+Included features:
+	- Converts any file into an equivalant resource (hpp) file
+
+Using f2hpp
+-------------
+
+In terminal type 'f2hpp' followed by "-v" or "-h" to display the version and help
+information. 
+
+If you wish to convert a file called 'image.png' type: ./f2hpp -f image.png -o res.hpp
+
+(flags "-f" and "-o" specify the input/output files)
+
+Installation
+------------
+
+Instructions for compiling f2hpp from source code
+
+Requirements (tested on):
+	- g++ 4.4.3 or newer
+	- make 3.8 or newer
+
+For Debian:
+	- sudo apt-get install build-essential make
+
+Known Bugs
+----------
+
+License
+-------
+
+Copyright(C) 2012 David Jolly <majestic53@gmail.com>
+
+This program is free software: you can redistribute it and/or modify
+it under the terms of the GNU General Public License as published by
+the Free Software Foundation, either version 3 of the License, or
+(at your option) any later version.
+
+This program is distributed in the hope that it will be useful,
+but WITHOUT ANY WARRANTY; without even the implied warranty of
+MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+GNU General Public License for more details.
