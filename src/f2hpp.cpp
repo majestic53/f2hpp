@@ -113,7 +113,7 @@ bool gen_file(const std::string &in_path, const std::string &out_path) {
 	out2 << "#include \"" << out_hpp_path << "\"\n\n";
 
 	// add data to cpp output file
-	out2 << "const unsigned char DATA[DATA_SIZE] = {\n\t";
+	out2 << "const unsigned char " << format_header << "::DATA[" << format_header << "::DATA_SIZE] = {\n\t";
 	
 	// iterate through data and append it to cpp output file
 	while(in) {
