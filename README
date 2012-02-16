@@ -12,7 +12,7 @@ Using f2hpp
 In terminal type './f2hpp' followed by "-v" or "-h" to display the version and help
 information. 
 
-If you wish to convert a file called 'image.png' type: ./f2hpp -f image.png -o res.hpp
+If you wish to convert a file called 'image.png' type: ./f2hpp -f image.png -o res
 
 (flags "-f" and "-o" specify the input/output files)
 

@@ -53,7 +53,7 @@ void to_uppercase(std::string &str);
 bool gen_file(const std::string &in_path, const std::string &out_path) {
 	unsigned char ch;
 	size_t pos, size, count = 0;
-	std::string format_header, format_define, format_class;
+	std::string format_header, format_define, format_class, out_cpp_path, out_hpp_path;
 	
 	// attempt to open input file
 	std::ifstream in(in_path.c_str(), std::ios::in);
@@ -62,10 +62,19 @@ bool gen_file(const std::string &in_path, const std::string &out_path) {
 		return false;
 	}
 
-	// attempt to create output file
-	std::ofstream out(out_path.c_str(), std::ios::out | std::ios::trunc);
+	// attempt to create hpp output file
+	out_hpp_path = out_path + ".hpp";
+	std::ofstream out(out_hpp_path.c_str(), std::ios::out | std::ios::trunc);
 	if(!out.is_open()) {
-		std::cerr << "Failed to create output file \'" << out_path << "\'" << std::endl;
+		std::cerr << "Failed to create output file \'" << out_hpp_path << "\'" << std::endl;
+		return false;
+	}
+
+	// attempt to create cpp output file
+	out_cpp_path = out_path + ".cpp";
+	std::ofstream out2(out_cpp_path.c_str(), std::ios::out | std::ios::trunc);
+	if(!out.is_open()) {
+		std::cerr << "Failed to create output file \'" << out_cpp_path << "\'" << std::endl;
 		return false;
 	}
 
@@ -74,36 +83,51 @@ bool gen_file(const std::string &in_path, const std::string &out_path) {
 	size = in.tellg();
 	in.seekg(NULL);
 
-	// add header to output file
+	// add header to hpp output file
 	pos = out_path.find_last_of("/\\");
 	format_header = out_path.substr(pos + 1);
-	out << "/*\n * " << format_header << "\n * Automatically generated using f2hpp\n */\n\n";
+	out << "/*\n * " << format_header << ".hpp" << "\n * Automatically generated using f2hpp\n */\n\n";
 
-	// add define to output file
+	// add define to hpp output file
 	format_define = format_header;
 	to_uppercase(format_define);
-	out << "#ifndef " << format_define << std::endl << "#define " << format_define << std::endl << std::endl;
+	out << "#ifndef " << format_define << "_HPP_" << std::endl << "#define " << format_define << "_HPP_" << std::endl << std::endl;
 
-	// add class definition to output file
+	// add class definition to hpp output file
 	pos = format_header.find_last_of(".");
 	format_class = format_header.substr(0, pos);
 	out << "class " << format_class << " {\npublic:\n\n";
-	out << "\tunsigned long DATA_SIZE = " << size << ";\n";
-	out << "\tunsigned char DATA[DATA_SIZE] = {\n\t\t";
+	out << "\tstatic const unsigned long DATA_SIZE = " << size << ";\n";
+	out << "\tstatic const unsigned char DATA[];";
+
+	// add end to hpp output file
+	out << "\n\n};\n\n#endif";
+	out.close();
+
+	// add header to cpp output file
+	pos = out_path.find_last_of("/\\");
+	format_header = out_path.substr(pos + 1);
+	out2 << "/*\n * " << format_header << ".cpp" << "\n * Automatically generated using f2hpp\n */\n\n";
+
+	// add includes to cpp output file
+	out2 << "#include \"" << out_hpp_path << "\"\n\n";
+
+	// add data to cpp output file
+	out2 << "const unsigned char DATA[DATA_SIZE] = {\n\t";
 	
-	// iterate through data and append it to output file
+	// iterate through data and append it to cpp output file
 	while(in) {
 		if(count
 				&& !(count % DIVIDER))
-			out << "\n\t\t";
+			out2 << "\n\t";
 		in >> ch;
-		out << "0x" << std::hex << (unsigned int) ch << ", ";
+		out2 << "0x" << std::hex << (unsigned int) ch << ", ";
 		++count;
 	}
 
-	// add end
-	out << "\n\t};\n};\n\n#endif";
-	out.close();
+	// add end to cpp output file
+	out2 << "\n};";
+	out2.close();
 	in.close();
 	return true;
 }
@@ -133,7 +157,6 @@ void to_uppercase(std::string &str) {
 		else if(str.at(i) == '.')
 			str.at(i) = '_';
 	}
-	str += '_';
 }
 
 /*
