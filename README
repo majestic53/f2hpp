@@ -4,12 +4,12 @@ Version:
 	- 0.1.0
 
 Included features:
-	- Converts any file into an equivalant resource (hpp) file
+	- Converts any file into an equivalent resource (hpp) file
 
 Using f2hpp
 -------------
 
-In terminal type 'f2hpp' followed by "-v" or "-h" to display the version and help
+In terminal type './f2hpp' followed by "-v" or "-h" to display the version and help
 information. 
 
 If you wish to convert a file called 'image.png' type: ./f2hpp -f image.png -o res.hpp
